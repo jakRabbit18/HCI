@@ -97,6 +97,22 @@ public class MainWindow {
 		selctionPanel.add(topicsPanel, "name_42501900295119");
 		topicsPanel.setLayout(new GridLayout(3, 5, 0, 0));
 		
+		/**
+		 * for all of these buttons, they need to be replaced with a function
+		 * that reads all the xmls available and makes a button for each topic described
+		 * in those files. These need to be loaded into some sort of list or hashmap to make it
+		 * easy to pick and choose from them as need be.
+		 * 
+		 * Buttons need to give an overview of the category that they represent when hovered over,
+		 * and switch to the commandsPanel when pressed, loading the appropriate commands into the 
+		 * commands panel
+		 * 
+		 * Buttons in the commands panel need to give a basic overview of the command in the 
+		 * infoPane when hovered over. This locks into the upper text pane when the button is pressed,
+		 * and the selection pane is next populated with the optinal arguments. When hovered over, the 
+		 * arg buttons should cause the description of the arguments to appear in the the textPane
+		 * clicking the argument button will lock the text into the text pane
+		 */
 		JButton btnBasics = new JButton("Basics");
 		topicsPanel.add(btnBasics);
 		btnBasics.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -121,10 +137,13 @@ public class MainWindow {
 		
 		JPanel optionaArgsPanel = new JPanel();
 		selctionPanel.add(optionaArgsPanel, "name_42544981621797");
+		
+		
 		btnIO.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
+		
 		btnBasics.addMouseListener(new MouseAdapter() {
 			//TODO add "display overview of category" text actions
 			@Override
