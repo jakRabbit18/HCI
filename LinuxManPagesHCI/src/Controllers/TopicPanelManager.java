@@ -10,26 +10,28 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
+import reader.UArg;
 import reader.UCommand;
 
 public class TopicPanelManager extends MouseAdapter{
 
 	List<UCommand> commands;
 	JTextPane textPane;
-	JPanel selectionPanel, commandsPanel;
+	JPanel selectionPanel, commandsPanel, argsPanel;
 	String category;
 	
-	public TopicPanelManager(JTextPane tpane,String category, List<UCommand> commands, JPanel parent, JPanel commandsPanel){
+	public TopicPanelManager(JTextPane tpane,String category, List<UCommand> commands, JPanel parent, JPanel commandsPanel, JPanel argsPanel){
 		super();
 		this.commands = commands;
 		this.selectionPanel = parent;
 		this.commandsPanel = commandsPanel;
+		this.argsPanel = argsPanel;
 		this.category = category;
 		this.textPane = tpane;
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e){
+	public void mousePressed(MouseEvent e){
 		commandsPanel.removeAll();
 		for(UCommand c: commands){
 			if(c.getCategory().equals(category)){
@@ -37,6 +39,7 @@ public class TopicPanelManager extends MouseAdapter{
 				commandsPanel.add(b);
 				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "commandsPanel");
 				//TODO add listeners to these buttons to get to their arguments
+				b.addMouseListener(new CommandsPanelCtrl(c, c.getCategory(), textPane, selectionPanel, argsPanel));
 			}
 		}
 	}
@@ -46,7 +49,7 @@ public class TopicPanelManager extends MouseAdapter{
 		String commNames = "";
 		for(UCommand comm: commands){
 			if(comm.getCategory().equals(category)){
-				commNames += comm.getName() + ", usage: " + comm.getSynopsis() +"\n";
+				commNames += comm.getSynopsis() +"\n";
 			}
 		}
 		textPane.setText(commNames);

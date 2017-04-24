@@ -10,10 +10,11 @@ specified.
 Mandatory arguments to long options are mandatory for short options
 too.
 </description>
-<category>Directory</category><arg call="-a" longCall="--all">do not ignore entries starting with .</arg>
+<category>Extra</category>
+<arg call="-a" longCall="--all">do not ignore entries starting with .</arg>
 <arg call="-l" longCall="">use a long listing format</arg>
 <arg call="-s" longCall="--size">print the allocated size of each file, in blocks</arg>
-	</command>
+</command>
 
 
 

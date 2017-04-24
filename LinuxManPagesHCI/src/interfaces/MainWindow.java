@@ -110,9 +110,9 @@ public class MainWindow {
 		selectionPanel.add(commandsPanel, "commandsPanel");
 		commandsPanel.setLayout(new GridLayout(3,5, 0,0));
 
-		JPanel optionaArgsPanel = new JPanel();
-		selectionPanel.add(optionaArgsPanel, "argsPanel");
-		optionaArgsPanel.setLayout(new GridLayout(3,5,0,0));
+		JPanel optionalArgsPanel = new JPanel();
+		selectionPanel.add(optionalArgsPanel, "argsPanel");
+		optionalArgsPanel.setLayout(new GridLayout(3,5,0,0));
 		
 		JTextPane txtpnTbd = new JTextPane();
 		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
@@ -159,7 +159,7 @@ public class MainWindow {
 				JButton button = new JButton(command.getCategory());
 				topicsPanel.add(button);
 				button.setAlignmentX(Component.CENTER_ALIGNMENT);
-				button.addMouseListener(new TopicPanelManager(txtpnTbd, command.getCategory(), commands, selectionPanel, commandsPanel));
+				button.addMouseListener(new TopicPanelManager(txtpnTbd, command.getCategory(), commands, selectionPanel, commandsPanel, optionalArgsPanel));
 			}
 		}
 		

@@ -10,7 +10,7 @@ public class UArg {
 	}
 	
 	public UArg(String c, String d){
-		this(c, null, d);
+		this(c, "", d);
 	}
 
 	public String getCall() {
