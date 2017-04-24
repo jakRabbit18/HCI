@@ -3,20 +3,23 @@ package reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
+
 public class UCommand {
 
-	String name, synopsis, description;
+	String name, synopsis, description, category;
 	ArrayList<UArg> args;
 	
-	public UCommand(String name, String synopsis, String description, ArrayList<UArg> args) {
+	public UCommand(String name, String synopsis, String description, String category, ArrayList<UArg> args) {
 		this.name = name;
 		this.synopsis = synopsis;
 		this.description = description;
+		this.category = category;
 		this.args = args;
 	}
 	
-	public UCommand(String name, String synopsis, String description){
-		this(name, synopsis, description, new ArrayList<UArg>());
+	public UCommand(String name, String synopsis, String description, String category){
+		this(name, synopsis, description, category, new ArrayList<UArg>());
 	}
 
 	public String getName() {
@@ -71,6 +74,10 @@ public class UCommand {
 			s+= " " + a.call;
 		}
 		return s;
+	}
+
+	public String getCategory() {
+		return this.category;
 	}
 
 }

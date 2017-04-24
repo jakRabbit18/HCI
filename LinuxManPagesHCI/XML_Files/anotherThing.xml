@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <command>
-<name>ls</name>
-<synopsis>ls [OPTION]...[FILE]...</synopsis>
+<name>aT</name>
+<synopsis>lol idk</synopsis>
 <description>
 List information about the FILEs (the current directory by default).
 Sort entries alphabetically if none of -cftuvSUX nor --sort is
@@ -10,7 +10,8 @@ specified.
 Mandatory arguments to long options are mandatory for short options
 too.
 </description>
-<category>Directory</category><arg call="-a" longCall="--all">do not ignore entries starting with .</arg>
+<category>Something</category>
+<arg call="-a" longCall="--all">do not ignore entries starting with .</arg>
 <arg call="-l" longCall="">use a long listing format</arg>
 <arg call="-s" longCall="--size">print the allocated size of each file, in blocks</arg>
 	</command>

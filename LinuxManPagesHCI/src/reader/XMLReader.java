@@ -57,7 +57,7 @@ public class XMLReader {
 
 	public static UCommand readXMLToCommand(String xmlFileName){
 		XMLReader reader = new XMLReader(xmlFileName);
-		String name, syn, des;
+		String name, syn, des, cat;
 		
 		NodeList nList = reader.doc.getElementsByTagName("name");
 		name = nList.item(0).getTextContent();
@@ -68,8 +68,11 @@ public class XMLReader {
 		nList = reader.doc.getElementsByTagName("description");
 		des = nList.item(0).getTextContent();
 		
+		nList = reader.doc.getElementsByTagName("category");
+		cat = nList.item(0).getTextContent();
+		
 		ArrayList<UArg> args = reader.getOptionalArguments();
-		UCommand com = new UCommand(name, syn, des, args);
+		UCommand com = new UCommand(name, syn, des, cat, args);
 		return com;
 	}
 

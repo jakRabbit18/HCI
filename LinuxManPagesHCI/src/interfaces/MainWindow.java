@@ -10,6 +10,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
+import Controllers.TopicPanelManager;
+import reader.UCommand;
+import reader.XMLReader;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -22,6 +27,10 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.SpringLayout;
 import java.awt.Component;
 import java.awt.CardLayout;
@@ -64,7 +73,7 @@ public class MainWindow {
 		contentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SpringLayout springLayout = new SpringLayout();
 		contentFrame.getContentPane().setLayout(springLayout);
-		
+
 		JLabel lblUnixCommands = new JLabel("Unix Commands");
 		springLayout.putConstraint(SpringLayout.NORTH, lblUnixCommands, 6, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, lblUnixCommands, 6, SpringLayout.WEST, contentFrame.getContentPane());
@@ -72,7 +81,7 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.EAST, lblUnixCommands, 150, SpringLayout.WEST, contentFrame.getContentPane());
 		lblUnixCommands.setHorizontalAlignment(SwingConstants.LEFT);
 		contentFrame.getContentPane().add(lblUnixCommands);
-		
+
 		JPanel locationTracking = new JPanel();
 		springLayout.putConstraint(SpringLayout.NORTH, locationTracking, 53, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, locationTracking, 6, SpringLayout.WEST, contentFrame.getContentPane());
@@ -80,22 +89,40 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.EAST, locationTracking, 231, SpringLayout.WEST, contentFrame.getContentPane());
 		contentFrame.getContentPane().add(locationTracking);
 		locationTracking.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		JLabel lblTrackingLocationsLike = new JLabel("Tracking Locations Like...");
 		locationTracking.add(lblTrackingLocationsLike);
-		
+
 		JScrollPane optionSelectPane = new JScrollPane();
 		springLayout.putConstraint(SpringLayout.NORTH, optionSelectPane, 133, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, optionSelectPane, 6, SpringLayout.WEST, contentFrame.getContentPane());
 		contentFrame.getContentPane().add(optionSelectPane);
-		
-		JPanel selctionPanel = new JPanel();
-		optionSelectPane.setViewportView(selctionPanel);
-		selctionPanel.setLayout(new CardLayout(0, 0));
-		
+
+		JPanel selectionPanel = new JPanel();
+		optionSelectPane.setViewportView(selectionPanel);
+		selectionPanel.setLayout(new CardLayout(0, 0));
+
 		JPanel topicsPanel = new JPanel();
-		selctionPanel.add(topicsPanel, "name_42501900295119");
+		selectionPanel.add(topicsPanel, "topicsPanel");
 		topicsPanel.setLayout(new GridLayout(3, 5, 0, 0));
+
+		JPanel commandsPanel = new JPanel();
+		selectionPanel.add(commandsPanel, "commandsPanel");
+		commandsPanel.setLayout(new GridLayout(3,5, 0,0));
+
+		JPanel optionaArgsPanel = new JPanel();
+		selectionPanel.add(optionaArgsPanel, "argsPanel");
+		optionaArgsPanel.setLayout(new GridLayout(3,5,0,0));
+		
+		JTextPane txtpnTbd = new JTextPane();
+		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, optionSelectPane, 0, SpringLayout.SOUTH, txtpnTbd);
+		springLayout.putConstraint(SpringLayout.EAST, optionSelectPane, -10, SpringLayout.WEST, txtpnTbd);
+		springLayout.putConstraint(SpringLayout.NORTH, txtpnTbd, 10, SpringLayout.NORTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, txtpnTbd, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, txtpnTbd, -10, SpringLayout.EAST, contentFrame.getContentPane());
+		txtpnTbd.setText("TBD");
+		contentFrame.getContentPane().add(txtpnTbd);
 		
 		/**
 		 * for all of these buttons, they need to be replaced with a function
@@ -111,54 +138,31 @@ public class MainWindow {
 		 * infoPane when hovered over. This locks into the upper text pane when the button is pressed,
 		 * and the selection pane is next populated with the optinal arguments. When hovered over, the 
 		 * arg buttons should cause the description of the arguments to appear in the the textPane
-		 * clicking the argument button will lock the text into the text pane
+		 * clicking the argument button will lock the text into the text panel
 		 */
-		JButton btnBasics = new JButton("Basics");
-		topicsPanel.add(btnBasics);
-		btnBasics.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		JButton btnNetwork = new JButton("Network");
-		topicsPanel.add(btnNetwork);
-		btnNetwork.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnNetwork.setAlignmentY(Component.TOP_ALIGNMENT);
-		
-		JButton btnFileManagement = new JButton("File Management");
-		topicsPanel.add(btnFileManagement);
-		btnFileManagement.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		JButton btnIO = new JButton("I/O");
-		topicsPanel.add(btnIO);
-		
-		JButton btnGitFucntions = new JButton("Git Fucntions");
-		topicsPanel.add(btnGitFucntions);
-		
-		JPanel commandsPanel = new JPanel();
-		selctionPanel.add(commandsPanel, "name_42531984596752");
-		
-		JPanel optionaArgsPanel = new JPanel();
-		selctionPanel.add(optionaArgsPanel, "name_42544981621797");
-		
-		
-		btnIO.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+
+		File folder = new File("./XML_Files");
+		File[] listOfFiles = folder.listFiles();
+		List<UCommand> commands = new ArrayList<UCommand>();
+		for (File file : listOfFiles) {
+			if (file.isFile()) {
+				System.out.println(file.getName());
+				System.out.println(XMLReader.readXMLToCommand(file));
+				commands.add(XMLReader.readXMLToCommand(file));
 			}
-		});
+		}
 		
-		btnBasics.addMouseListener(new MouseAdapter() {
-			//TODO add "display overview of category" text actions
-			@Override
-			public void mouseEntered(MouseEvent e) {
+		List<String> categories = new ArrayList<String>();
+		for(UCommand command: commands){
+			if(!categories.contains(command.getCategory())){
+				categories.add(command.getCategory());
+				JButton button = new JButton(command.getCategory());
+				topicsPanel.add(button);
+				button.setAlignmentX(Component.CENTER_ALIGNMENT);
+				button.addMouseListener(new TopicPanelManager(txtpnTbd, command.getCategory(), commands, selectionPanel, commandsPanel));
 			}
-		});
+		}
 		
-		JTextPane txtpnTbd = new JTextPane();
-		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, optionSelectPane, 0, SpringLayout.SOUTH, txtpnTbd);
-		springLayout.putConstraint(SpringLayout.EAST, optionSelectPane, -10, SpringLayout.WEST, txtpnTbd);
-		springLayout.putConstraint(SpringLayout.NORTH, txtpnTbd, 10, SpringLayout.NORTH, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, txtpnTbd, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, txtpnTbd, -10, SpringLayout.EAST, contentFrame.getContentPane());
-		txtpnTbd.setText("TBD");
-		contentFrame.getContentPane().add(txtpnTbd);
 	}
+
 }
