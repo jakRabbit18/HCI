@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
-import reader.UArg;
 import reader.UCommand;
 
 public class TopicPanelManager extends MouseAdapter{

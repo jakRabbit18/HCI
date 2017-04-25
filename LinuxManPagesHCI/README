@@ -1,0 +1,4 @@
+Running the program:
+in the commandline run in the directory where the .jar file is stored:
+java -jar ejharding_HCIProject4.jar
+Failing the Jar File, program can be run from zip file in eclipse neon

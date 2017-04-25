@@ -172,6 +172,7 @@ public class MainWindow {
 		 */
 
 		File folder = new File("./XML_Files");
+		System.out.println(folder.getAbsolutePath());
 		File[] listOfFiles = folder.listFiles();
 		List<UCommand> commands = new ArrayList<UCommand>();
 		for (File file : listOfFiles) {
