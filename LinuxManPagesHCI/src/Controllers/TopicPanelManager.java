@@ -2,6 +2,8 @@ package Controllers;
 
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -19,7 +21,7 @@ public class TopicPanelManager extends MouseAdapter{
 	JTextPane textPane;
 	JPanel selectionPanel, commandsPanel, argsPanel, historyPanel;
 	String category;
-	
+
 	public TopicPanelManager(JTextPane tpane,String category, List<UCommand> commands, JPanel parent, JPanel commandsPanel, JPanel argsPanel, JPanel historyPanel){
 		super();
 		this.commands = commands;
@@ -30,21 +32,30 @@ public class TopicPanelManager extends MouseAdapter{
 		this.category = category;
 		this.textPane = tpane;
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e){
 		commandsPanel.removeAll();
-		
 		JButton previousLevel = new JButton(category);
+		previousLevel.setPreferredSize(new Dimension(198,33));
 		previousLevel.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mousePressed(MouseEvent e){
+				if(historyPanel.getComponents().length > 2){
+					historyPanel.remove(2);
+					historyPanel.repaint();
+				}
 				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "commandsPanel");
 			}
 		});
-		historyPanel.add(previousLevel);
+		GridBagConstraints gbc = new GridBagConstraints();
+		//		gbc.anchor = GridBagConstraints.PAGE_END;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		historyPanel.add(previousLevel, gbc);
 		historyPanel.repaint();
-		
+
 		for(UCommand c: commands){
 			if(c.getCategory().equals(category)){
 				JButton b = new JButton(c.getName());
@@ -55,7 +66,7 @@ public class TopicPanelManager extends MouseAdapter{
 			}
 		}
 	}
-	
+
 	@Override
 	public void mouseEntered(MouseEvent e){
 		String commNames = "";
@@ -66,7 +77,7 @@ public class TopicPanelManager extends MouseAdapter{
 		}
 		textPane.setText(commNames);
 	}
-	
+
 	@Override
 	public void mouseExited(MouseEvent e){
 		textPane.setText("");

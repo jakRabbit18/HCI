@@ -1,6 +1,8 @@
 package Controllers;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -31,6 +33,22 @@ public class CommandsPanelCtrl extends MouseAdapter {
 	@Override
 	public void mousePressed(MouseEvent e){
 		argsPanel.removeAll();
+		
+		JButton previousLevel = new JButton(command.getName());
+		previousLevel.setPreferredSize(new Dimension(198,33));
+		previousLevel.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e){
+				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "argsPanel");
+			}
+		});
+		GridBagConstraints gbc = new GridBagConstraints();
+//		gbc.anchor = GridBagConstraints.PAGE_END;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		historyPanel.add(previousLevel, gbc);
+		historyPanel.repaint();
 		
 		for(UArg arg: command.getArgs()){
 			JButton butt = new JButton(arg.getCall());

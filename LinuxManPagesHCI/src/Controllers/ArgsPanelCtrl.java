@@ -44,7 +44,7 @@ public class ArgsPanelCtrl extends MouseAdapter{
 	@Override
 	public void mouseEntered(MouseEvent e){
 		if(!lockText){
-			String s = "ButtonID:" + idNum + " " + arg.getCall() + " " + arg.getLongCall() + "\n" + arg.getDescription();
+			String s =arg.getCall() + " " + arg.getLongCall() + "\n" + arg.getDescription();
 			textPane.setText(s);
 		}
 	}

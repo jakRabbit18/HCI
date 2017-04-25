@@ -1,19 +1,29 @@
 <?xml version="1.0"?>
 
 <command>
-<name>ls</name>
-<synopsis>ls [OPTION]...[FILE]...</synopsis>
+<name>ifconfig</name>
+<synopsis>ifconfig [interface]
+ifconfig interface [aftype] options | address ...</synopsis>
 <description>
-List information about the FILEs (the current directory by default).
-Sort entries alphabetically if none of -cftuvSUX nor --sort is
-specified.
-Mandatory arguments to long options are mandatory for short options
-too.
+Ifconfig is used to configure the kernel-resident network interfaces. It is used at boot time to set up interfaces as necessary. After that, it is usually only needed when debugging or when system tuning is needed.
+If no arguments are given, ifconfig displays the status of the currently active interfaces. If a single interface argument is given, it displays the status of the given interface only; if a single -a argument is given, it displays the status of all interfaces, even those that are down. Otherwise, it configures an interface.
+
+Address Families
+If the first argument after the interface name is recognized as the name of a supported address family, that address family is used for decoding and displaying all protocol addresses. Currently supported address families include inet (TCP/IP, default), inet6 (IPv6), ax25 (AMPR Packet Radio), ddp (Appletalk Phase 2), ipx (Novell IPX) and netrom (AMPR Packet radio). All numbers supplied as parts in IPv4 dotted decimal notation may be decimal, octal, or hexadecimal, as specified in the ISO C standard (that is, a leading 0x or 0X implies hexadecimal; otherwise, a leading '0' implies octal; otherwise, the number is interpreted as decimal). Use of hexamedial and octal numbers is not RFC-compliant and therefore its use is discouraged and may go away.
 </description>
-<category>Directory</category><arg call="-a" longCall="--all">do not ignore entries starting with .</arg>
-<arg call="-l" longCall="">use a long listing format</arg>
-<arg call="-s" longCall="--size">print the allocated size of each file, in blocks</arg>
-	</command>
+
+<category>Network</category>
+<arg call="interface" longCall="">The name of the interface. This is usually a driver name followed by a unit number, for example eth0 for the first Ethernet interface.</arg>
+<arg call="up" longCall="">This flag causes the interface to be activated. It is implicitly specified if an address is assigned to the interface.</arg>
+<arg call="down" longCall="">This flag causes the driver for this interface to be shut down.</arg>
+	<arg call="[-]arp" longCall="">Enable or disable the use of the ARP protocol on this interface.</arg>
+	<arg call="[-]promisc" longCall="">Enable or disable the promiscuous mode of the interface. If selected, all packets on the network will be received by the interface.</arg>
+	<arg call="[-]allmulti" longCall="">
+		Enable or disable all-multicast mode. If selected, all multicast
+		packets on the network will be received by the interface.
+	</arg>
+	<arg call="io_addr addr" longCall="">Set the start address in I/O space for this device.</arg>
+</command>
 
 
 

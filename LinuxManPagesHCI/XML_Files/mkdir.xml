@@ -1,19 +1,16 @@
 <?xml version="1.0"?>
 
 <command>
-<name>ls</name>
-<synopsis>ls [OPTION]...[FILE]...</synopsis>
-<description>
-List information about the FILEs (the current directory by default).
-Sort entries alphabetically if none of -cftuvSUX nor --sort is
-specified.
-Mandatory arguments to long options are mandatory for short options
-too.
+<name>mkdir</name>
+<synopsis>mkdir pathname ... [mode]</synopsis>
+<description>mkdir() attempts to create a directory named pathname.
+
+The argument mode specifies the mode for the new directory (see stat(2)).  It is modified by the process's umask in the usual way: in the absence of a default ACL, the mode of the created direct mode and ~umask and 0777).  Whether other mode bits are honored for thecreated directory depends on the operating system.  For Linux, seeNOTES below.
+The newly created directory will be owned by the effective user ID of the process.  If the directory containing the file has the set-group-ID bit set, or if the filesystem is mounted with BSD group semantics(mount -o bsdgroups or, synonymously mount -o grpid), the new directory will inherit the group ownership from its parent; otherwise it will be owned by the effective group ID of the process.
+If the parent directory has the set-group-ID bit set, then so will the newly created directory. 
 </description>
-<category>Directory</category><arg call="-a" longCall="--all">do not ignore entries starting with .</arg>
-<arg call="-l" longCall="">use a long listing format</arg>
-<arg call="-s" longCall="--size">print the allocated size of each file, in blocks</arg>
-	</command>
+<category>Directory</category>
+</command>
 
 
 
