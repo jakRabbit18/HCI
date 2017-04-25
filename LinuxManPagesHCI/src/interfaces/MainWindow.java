@@ -34,10 +34,13 @@ import java.util.List;
 import javax.swing.SpringLayout;
 import java.awt.Component;
 import java.awt.CardLayout;
+import javax.swing.JTextField;
+import java.awt.Font;
 
 public class MainWindow {
 
 	private JFrame contentFrame;
+	private JTextField serachTextField;
 
 	/**
 	 * Launch the application.
@@ -75,14 +78,15 @@ public class MainWindow {
 		contentFrame.getContentPane().setLayout(springLayout);
 
 		JLabel lblUnixCommands = new JLabel("Unix Commands");
+		lblUnixCommands.setFont(new Font("Impact", Font.BOLD | Font.ITALIC, 22));
 		springLayout.putConstraint(SpringLayout.NORTH, lblUnixCommands, 6, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, lblUnixCommands, 6, SpringLayout.WEST, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, lblUnixCommands, 28, SpringLayout.NORTH, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, lblUnixCommands, 150, SpringLayout.WEST, contentFrame.getContentPane());
 		lblUnixCommands.setHorizontalAlignment(SwingConstants.LEFT);
 		contentFrame.getContentPane().add(lblUnixCommands);
 
 		JPanel locationTracking = new JPanel();
+		springLayout.putConstraint(SpringLayout.SOUTH, lblUnixCommands, -6, SpringLayout.NORTH, locationTracking);
+		springLayout.putConstraint(SpringLayout.EAST, lblUnixCommands, 0, SpringLayout.EAST, locationTracking);
 		springLayout.putConstraint(SpringLayout.NORTH, locationTracking, 53, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, locationTracking, 6, SpringLayout.WEST, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, locationTracking, 121, SpringLayout.NORTH, contentFrame.getContentPane());
@@ -90,12 +94,10 @@ public class MainWindow {
 		contentFrame.getContentPane().add(locationTracking);
 		locationTracking.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel lblTrackingLocationsLike = new JLabel("Tracking Locations Like...");
-		locationTracking.add(lblTrackingLocationsLike);
-
 		JScrollPane optionSelectPane = new JScrollPane();
-		springLayout.putConstraint(SpringLayout.NORTH, optionSelectPane, 133, SpringLayout.NORTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, optionSelectPane, 12, SpringLayout.SOUTH, locationTracking);
 		springLayout.putConstraint(SpringLayout.WEST, optionSelectPane, 6, SpringLayout.WEST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, optionSelectPane, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
 		contentFrame.getContentPane().add(optionSelectPane);
 
 		JPanel selectionPanel = new JPanel();
@@ -115,14 +117,29 @@ public class MainWindow {
 		optionalArgsPanel.setLayout(new GridLayout(3,5,0,0));
 		
 		JTextPane txtpnTbd = new JTextPane();
-		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, optionSelectPane, 0, SpringLayout.SOUTH, txtpnTbd);
 		springLayout.putConstraint(SpringLayout.EAST, optionSelectPane, -10, SpringLayout.WEST, txtpnTbd);
-		springLayout.putConstraint(SpringLayout.NORTH, txtpnTbd, 10, SpringLayout.NORTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, txtpnTbd, 0, SpringLayout.NORTH, optionSelectPane);
+		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, txtpnTbd, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, txtpnTbd, -10, SpringLayout.EAST, contentFrame.getContentPane());
 		txtpnTbd.setText("TBD");
 		contentFrame.getContentPane().add(txtpnTbd);
+		
+		serachTextField = new JTextField();
+		springLayout.putConstraint(SpringLayout.NORTH, serachTextField, 11, SpringLayout.NORTH, lblUnixCommands);
+		springLayout.putConstraint(SpringLayout.WEST, serachTextField, 373, SpringLayout.EAST, locationTracking);
+		
+		JButton btnTopLevel = new JButton("Topics");
+		btnTopLevel.setIcon(null);
+		locationTracking.add(btnTopLevel);
+		springLayout.putConstraint(SpringLayout.EAST, serachTextField, 0, SpringLayout.EAST, txtpnTbd);
+		contentFrame.getContentPane().add(serachTextField);
+		serachTextField.setColumns(10);
+		
+		JButton btnSearch = new JButton("Search");
+		springLayout.putConstraint(SpringLayout.NORTH, btnSearch, 11, SpringLayout.NORTH, lblUnixCommands);
+		springLayout.putConstraint(SpringLayout.EAST, btnSearch, -6, SpringLayout.WEST, serachTextField);
+		contentFrame.getContentPane().add(btnSearch);
 		
 		/**
 		 * for all of these buttons, they need to be replaced with a function
@@ -164,5 +181,4 @@ public class MainWindow {
 		}
 		
 	}
-
 }
