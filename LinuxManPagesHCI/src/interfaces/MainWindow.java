@@ -147,7 +147,7 @@ public class MainWindow {
 
 		JScrollPane searchResultsPane = new JScrollPane();
 		searchResultsPane.setViewportView(resultsPanel);
-		resultsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
 		informationContainer.add(textDisplayPane, "InfoPanel");
 		informationContainer.add(searchResultsPane, "SearchResultsPane");
@@ -260,10 +260,11 @@ public class MainWindow {
 			@Override
 			public void mousePressed(MouseEvent e){
 				List<UCommand> results = finder.searchByString(search.getText());
-				String result = "";
 				resultsPanel.removeAll();
 				for(UCommand c: results){
 					JButton b = new JButton(c.getName());
+					b.setPreferredSize(new Dimension(384, 34));
+					b.setMaximumSize(new Dimension(360, 34));
 					b.addMouseListener(new MouseAdapter(){
 						@Override
 						public void mousePressed(MouseEvent e){
@@ -333,6 +334,15 @@ public class MainWindow {
 							((CardLayout)informationContainer.getLayout()).show(informationContainer,"InfoPanel");
 						}
 					});
+					GridBagConstraints gbc_result = new GridBagConstraints();
+					gbc_result.fill = GridBagConstraints.HORIZONTAL;
+					if(resultsPanel.getComponents().length < 1){
+						gbc_result.gridy = 0;
+					} else {
+						gbc_result.gridy = GridBagConstraints.RELATIVE;
+					}
+					gbc_result.gridx = 0;
+//					resultsPanel.add(b, gbc_result);
 					resultsPanel.add(b);
 					((CardLayout)informationContainer.getLayout()).show(informationContainer,"SearchResultsPane");
 				}
