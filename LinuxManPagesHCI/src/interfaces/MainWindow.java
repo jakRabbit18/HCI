@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import Controllers.TopicPanelManager;
+import reader.CommandSearch;
 import reader.UCommand;
 import reader.XMLReader;
 
@@ -40,7 +41,7 @@ import java.awt.Font;
 public class MainWindow {
 
 	private JFrame contentFrame;
-	private JTextField serachTextField;
+	private JTextField search;
 
 	/**
 	 * Launch the application.
@@ -92,7 +93,7 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.SOUTH, locationTracking, 121, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, locationTracking, 231, SpringLayout.WEST, contentFrame.getContentPane());
 		contentFrame.getContentPane().add(locationTracking);
-		locationTracking.setLayout(new GridLayout(0, 1, 0, 0));
+		locationTracking.setLayout(new GridLayout(2, 0, 0, 0));
 
 		JScrollPane optionSelectPane = new JScrollPane();
 		springLayout.putConstraint(SpringLayout.NORTH, optionSelectPane, 12, SpringLayout.SOUTH, locationTracking);
@@ -117,6 +118,7 @@ public class MainWindow {
 		optionalArgsPanel.setLayout(new GridLayout(3,5,0,0));
 		
 		JTextPane txtpnTbd = new JTextPane();
+		txtpnTbd.setEditable(false);
 		springLayout.putConstraint(SpringLayout.EAST, optionSelectPane, -10, SpringLayout.WEST, txtpnTbd);
 		springLayout.putConstraint(SpringLayout.NORTH, txtpnTbd, 0, SpringLayout.NORTH, optionSelectPane);
 		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
@@ -125,21 +127,18 @@ public class MainWindow {
 		txtpnTbd.setText("TBD");
 		contentFrame.getContentPane().add(txtpnTbd);
 		
-		serachTextField = new JTextField();
-		springLayout.putConstraint(SpringLayout.NORTH, serachTextField, 11, SpringLayout.NORTH, lblUnixCommands);
-		springLayout.putConstraint(SpringLayout.WEST, serachTextField, 373, SpringLayout.EAST, locationTracking);
-		
-		JButton btnTopLevel = new JButton("Topics");
+		JButton btnTopLevel = new JButton("General Topics");
 		btnTopLevel.setIcon(null);
+		btnTopLevel.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e){
+				locationTracking.removeAll();
+				locationTracking.add(btnTopLevel);
+				locationTracking.repaint();
+				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "topicsPanel");
+			}
+		});
 		locationTracking.add(btnTopLevel);
-		springLayout.putConstraint(SpringLayout.EAST, serachTextField, 0, SpringLayout.EAST, txtpnTbd);
-		contentFrame.getContentPane().add(serachTextField);
-		serachTextField.setColumns(10);
-		
-		JButton btnSearch = new JButton("Search");
-		springLayout.putConstraint(SpringLayout.NORTH, btnSearch, 11, SpringLayout.NORTH, lblUnixCommands);
-		springLayout.putConstraint(SpringLayout.EAST, btnSearch, -6, SpringLayout.WEST, serachTextField);
-		contentFrame.getContentPane().add(btnSearch);
 		
 		/**
 		 * for all of these buttons, they need to be replaced with a function
@@ -176,9 +175,35 @@ public class MainWindow {
 				JButton button = new JButton(command.getCategory());
 				topicsPanel.add(button);
 				button.setAlignmentX(Component.CENTER_ALIGNMENT);
-				button.addMouseListener(new TopicPanelManager(txtpnTbd, command.getCategory(), commands, selectionPanel, commandsPanel, optionalArgsPanel));
+				button.addMouseListener(new TopicPanelManager(txtpnTbd, command.getCategory(), commands, selectionPanel, commandsPanel, optionalArgsPanel, locationTracking));
 			}
 		}
+		
+		CommandSearch finder = new CommandSearch(commands);
+		
+		JTextField search = new JTextField();
+		search.setToolTipText("What do you want to do?");
+		springLayout.putConstraint(SpringLayout.NORTH, search, 11, SpringLayout.NORTH, lblUnixCommands);
+		springLayout.putConstraint(SpringLayout.WEST, search, 373, SpringLayout.EAST, locationTracking);
+		springLayout.putConstraint(SpringLayout.EAST, search, 0, SpringLayout.EAST, txtpnTbd);
+		contentFrame.getContentPane().add(search);
+		search.setColumns(10);
+		
+		JButton btnSearch = new JButton("Search");
+		springLayout.putConstraint(SpringLayout.NORTH, btnSearch, 11, SpringLayout.NORTH, lblUnixCommands);
+		springLayout.putConstraint(SpringLayout.EAST, btnSearch, -6, SpringLayout.WEST, search);
+		btnSearch.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e){
+				List<UCommand> results = finder.searchByString(search.getText());
+				String result = "";
+				for(UCommand c: results){
+					result += c.toString() + "\n\n";
+				}
+				txtpnTbd.setText(result);
+			}
+		});
+		contentFrame.getContentPane().add(btnSearch);
 		
 	}
 }

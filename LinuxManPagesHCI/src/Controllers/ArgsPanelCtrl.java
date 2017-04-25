@@ -3,6 +3,7 @@ package Controllers;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
 import reader.UArg;
@@ -13,16 +14,18 @@ public class ArgsPanelCtrl extends MouseAdapter{
 	UCommand command;
 	UArg arg;
 	JTextPane textPane;
+	JPanel historyPanel;
 	int idNum;
 
 	static Boolean lockText = false;
 	static int buttonHold = 0;
 	static int numButtons = 0;
 
-	public ArgsPanelCtrl(UCommand command, UArg arg, JTextPane textPane) {
+	public ArgsPanelCtrl(UCommand command, UArg arg, JTextPane textPane, JPanel historyPanel) {
 		this.command = command;
 		this.arg = arg;
 		this.textPane = textPane;
+		this.historyPanel = historyPanel;
 		idNum = ++numButtons;
 	}
 
