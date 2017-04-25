@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
@@ -20,14 +21,16 @@ public class CommandsPanelCtrl extends MouseAdapter {
 	JPanel argsPanel, selectionPanel, historyPanel;
 	JTextPane textPane;
 	String category;
+	JLabel title;
 	
-	public CommandsPanelCtrl(UCommand command, String category, JTextPane textPane, JPanel selectionPanel, JPanel argsPanel, JPanel locationHistory) {
+	public CommandsPanelCtrl(UCommand command, String category, JTextPane textPane, JPanel selectionPanel, JPanel argsPanel, JPanel locationHistory, JLabel title) {
 		this.command = command;
 		this.textPane = textPane;
 		this.category = category;
 		this.argsPanel = argsPanel;
 		this.selectionPanel = selectionPanel;
 		this.historyPanel = locationHistory;
+		this.title = title;
 	}
 	
 	@Override
@@ -35,24 +38,26 @@ public class CommandsPanelCtrl extends MouseAdapter {
 		argsPanel.removeAll();
 		
 		JButton previousLevel = new JButton(command.getName());
-		previousLevel.setPreferredSize(new Dimension(198,33));
+		previousLevel.setPreferredSize(new Dimension(100,33));
 		previousLevel.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mousePressed(MouseEvent e){
 				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "argsPanel");
+				title.setText(command.getName() + " Arguments");
 			}
 		});
 		GridBagConstraints gbc = new GridBagConstraints();
 //		gbc.anchor = GridBagConstraints.PAGE_END;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridx = 2;
+		gbc.gridy = 0;
 		historyPanel.add(previousLevel, gbc);
 		historyPanel.repaint();
-		
+		title.setText(command.getName() + " Arguments");
+		title.repaint();
 		for(UArg arg: command.getArgs()){
 			JButton butt = new JButton(arg.getCall());
-			butt.addMouseListener(new ArgsPanelCtrl(command, arg, textPane, historyPanel));
+			butt.addMouseListener(new ArgsPanelCtrl(command, arg, textPane, historyPanel, title));
 			argsPanel.add(butt);
 		}
 		((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "argsPanel");
@@ -66,7 +71,7 @@ public class CommandsPanelCtrl extends MouseAdapter {
 	
 	@Override
 	public void mouseExited(MouseEvent e){
-		textPane.setText("");
+//		textPane.setText("");
 	}
 	
 }

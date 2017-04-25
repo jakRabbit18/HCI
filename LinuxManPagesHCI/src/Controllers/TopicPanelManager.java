@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
@@ -21,8 +22,9 @@ public class TopicPanelManager extends MouseAdapter{
 	JTextPane textPane;
 	JPanel selectionPanel, commandsPanel, argsPanel, historyPanel;
 	String category;
+	JLabel title;
 
-	public TopicPanelManager(JTextPane tpane,String category, List<UCommand> commands, JPanel parent, JPanel commandsPanel, JPanel argsPanel, JPanel historyPanel){
+	public TopicPanelManager(JTextPane tpane,String category, List<UCommand> commands, JPanel parent, JPanel commandsPanel, JPanel argsPanel, JPanel historyPanel, JLabel locationTitle){
 		super();
 		this.commands = commands;
 		this.selectionPanel = parent;
@@ -31,13 +33,14 @@ public class TopicPanelManager extends MouseAdapter{
 		this.historyPanel = historyPanel;
 		this.category = category;
 		this.textPane = tpane;
+		this.title = locationTitle;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e){
 		commandsPanel.removeAll();
 		JButton previousLevel = new JButton(category);
-		previousLevel.setPreferredSize(new Dimension(198,33));
+		previousLevel.setPreferredSize(new Dimension(100,33));
 		previousLevel.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mousePressed(MouseEvent e){
@@ -46,23 +49,27 @@ public class TopicPanelManager extends MouseAdapter{
 					historyPanel.repaint();
 				}
 				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "commandsPanel");
+				title.setText(category + " Commands");
+				title.repaint();
 			}
 		});
 		GridBagConstraints gbc = new GridBagConstraints();
 		//		gbc.anchor = GridBagConstraints.PAGE_END;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridx = 0;
-		gbc.gridy = 1;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
 		historyPanel.add(previousLevel, gbc);
 		historyPanel.repaint();
 
+		title.setText(category + " Commands");
+		title.repaint();
 		for(UCommand c: commands){
 			if(c.getCategory().equals(category)){
 				JButton b = new JButton(c.getName());
 				commandsPanel.add(b);
 				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "commandsPanel");
 				//TODO add listeners to these buttons to get to their arguments
-				b.addMouseListener(new CommandsPanelCtrl(c, c.getCategory(), textPane, selectionPanel, argsPanel, historyPanel));
+				b.addMouseListener(new CommandsPanelCtrl(c, c.getCategory(), textPane, selectionPanel, argsPanel, historyPanel, title));
 			}
 		}
 	}
@@ -80,6 +87,6 @@ public class TopicPanelManager extends MouseAdapter{
 
 	@Override
 	public void mouseExited(MouseEvent e){
-		textPane.setText("");
+//		textPane.setText("");
 	}
 }

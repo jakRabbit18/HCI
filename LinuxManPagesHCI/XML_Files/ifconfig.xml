@@ -18,10 +18,7 @@ If the first argument after the interface name is recognized as the name of a su
 <arg call="down" longCall="">This flag causes the driver for this interface to be shut down.</arg>
 	<arg call="[-]arp" longCall="">Enable or disable the use of the ARP protocol on this interface.</arg>
 	<arg call="[-]promisc" longCall="">Enable or disable the promiscuous mode of the interface. If selected, all packets on the network will be received by the interface.</arg>
-	<arg call="[-]allmulti" longCall="">
-		Enable or disable all-multicast mode. If selected, all multicast
-		packets on the network will be received by the interface.
-	</arg>
+	<arg call="[-]allmulti" longCall="">Enable or disable all-multicast mode. If selected, all multicast packets on the network will be received by the interface.</arg>
 	<arg call="io_addr addr" longCall="">Set the start address in I/O space for this device.</arg>
 </command>
 

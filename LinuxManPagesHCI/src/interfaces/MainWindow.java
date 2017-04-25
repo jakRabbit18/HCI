@@ -11,8 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import Controllers.ArgsPanelCtrl;
+import Controllers.CommandsPanelCtrl;
 import Controllers.TopicPanelManager;
 import reader.CommandSearch;
+import reader.UArg;
 import reader.UCommand;
 import reader.XMLReader;
 
@@ -74,7 +77,7 @@ public class MainWindow {
 		contentFrame = new JFrame();
 		contentFrame.setResizable(false);
 		contentFrame.setTitle("Linux Manual");
-		contentFrame.setBounds(100, 100, 800, 600);
+		contentFrame.setBounds(100, 100, 800, 483);
 		contentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SpringLayout springLayout = new SpringLayout();
 		contentFrame.getContentPane().setLayout(springLayout);
@@ -82,6 +85,7 @@ public class MainWindow {
 		JLabel lblUnixCommands = new JLabel("Unix Commands");
 		springLayout.putConstraint(SpringLayout.NORTH, lblUnixCommands, 6, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, lblUnixCommands, 6, SpringLayout.WEST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, lblUnixCommands, -569, SpringLayout.EAST, contentFrame.getContentPane());
 		lblUnixCommands.setFont(new Font("Impact", Font.BOLD | Font.ITALIC, 22));
 		lblUnixCommands.setHorizontalAlignment(SwingConstants.LEFT);
 		contentFrame.getContentPane().add(lblUnixCommands);
@@ -89,13 +93,19 @@ public class MainWindow {
 		JPanel locationTracking = new JPanel();
 		springLayout.putConstraint(SpringLayout.SOUTH, lblUnixCommands, -6, SpringLayout.NORTH, locationTracking);
 		springLayout.putConstraint(SpringLayout.WEST, locationTracking, 6, SpringLayout.WEST, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, locationTracking, 164, SpringLayout.NORTH, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, locationTracking, -410, SpringLayout.EAST, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.NORTH, locationTracking, 53, SpringLayout.NORTH, contentFrame.getContentPane());
 		contentFrame.getContentPane().add(locationTracking);
 
+		JLabel locationTitle = new JLabel("General Topics");
+		locationTitle.setFont(new Font("Impact", Font.BOLD | Font.ITALIC, 18));
+		springLayout.putConstraint(SpringLayout.NORTH, locationTitle, 10, SpringLayout.SOUTH, locationTracking);
+		springLayout.putConstraint(SpringLayout.WEST, locationTitle, 10, SpringLayout.WEST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, locationTitle, -569, SpringLayout.EAST, contentFrame.getContentPane());
+		contentFrame.getContentPane().add(locationTitle);
+
 		JScrollPane optionSelectPane = new JScrollPane();
-		springLayout.putConstraint(SpringLayout.NORTH, optionSelectPane, 14, SpringLayout.SOUTH, locationTracking);
+		springLayout.putConstraint(SpringLayout.NORTH, optionSelectPane, 67, SpringLayout.SOUTH, locationTracking);
 		springLayout.putConstraint(SpringLayout.WEST, optionSelectPane, 6, SpringLayout.WEST, contentFrame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, optionSelectPane, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
 		contentFrame.getContentPane().add(optionSelectPane);
@@ -114,17 +124,35 @@ public class MainWindow {
 
 		JPanel optionalArgsPanel = new JPanel();
 		selectionPanel.add(optionalArgsPanel, "argsPanel");
-		optionalArgsPanel.setLayout(new GridLayout(3,5,0,0));
+		optionalArgsPanel.setLayout(new GridLayout(3,5,0,0));;
 
-		JTextPane txtpnTbd = new JTextPane();
-		springLayout.putConstraint(SpringLayout.EAST, optionSelectPane, -10, SpringLayout.WEST, txtpnTbd);
-		springLayout.putConstraint(SpringLayout.NORTH, txtpnTbd, 0, SpringLayout.NORTH, optionSelectPane);
-		springLayout.putConstraint(SpringLayout.SOUTH, txtpnTbd, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
-		txtpnTbd.setEditable(false);
-		springLayout.putConstraint(SpringLayout.WEST, txtpnTbd, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, txtpnTbd, -10, SpringLayout.EAST, contentFrame.getContentPane());
-		txtpnTbd.setText("TBD");
-		contentFrame.getContentPane().add(txtpnTbd);;
+		JPanel informationContainer = new JPanel();
+		springLayout.putConstraint(SpringLayout.WEST, informationContainer, 10, SpringLayout.EAST, optionSelectPane);
+		springLayout.putConstraint(SpringLayout.SOUTH, informationContainer, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, informationContainer, -10, SpringLayout.EAST, contentFrame.getContentPane());
+		contentFrame.getContentPane().add(informationContainer);
+		informationContainer.setLayout(new CardLayout(0, 0));
+
+		JTextPane textDisplayPane = new JTextPane();
+		informationContainer.add(textDisplayPane, "textPane");
+		springLayout.putConstraint(SpringLayout.EAST, optionSelectPane, -10, SpringLayout.WEST, textDisplayPane);
+		springLayout.putConstraint(SpringLayout.NORTH, textDisplayPane, 0, SpringLayout.NORTH, optionSelectPane);
+		springLayout.putConstraint(SpringLayout.SOUTH, textDisplayPane, -10, SpringLayout.SOUTH, contentFrame.getContentPane());
+		textDisplayPane.setEditable(false);
+		springLayout.putConstraint(SpringLayout.WEST, textDisplayPane, contentFrame.getWidth()/2, SpringLayout.WEST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, textDisplayPane, -10, SpringLayout.EAST, contentFrame.getContentPane());
+		textDisplayPane.setText("TBD");
+
+		JPanel resultsPanel = new JPanel();
+
+		JScrollPane searchResultsPane = new JScrollPane();
+		searchResultsPane.setViewportView(resultsPanel);
+		resultsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+		informationContainer.add(textDisplayPane, "InfoPanel");
+		informationContainer.add(searchResultsPane, "SearchResultsPane");
+
+
 
 		/**
 		 * for all of these buttons, they need to be replaced with a function
@@ -161,36 +189,47 @@ public class MainWindow {
 				JButton button = new JButton(command.getCategory());
 				topicsPanel.add(button);
 				button.setAlignmentX(Component.CENTER_ALIGNMENT);
-				button.addMouseListener(new TopicPanelManager(txtpnTbd, command.getCategory(), commands, selectionPanel, commandsPanel, optionalArgsPanel, locationTracking));
+				button.addMouseListener(new TopicPanelManager(textDisplayPane, command.getCategory(), commands, selectionPanel, commandsPanel, optionalArgsPanel, locationTracking, locationTitle));
+				button.addMouseListener(new MouseAdapter(){
+					@Override
+					public void mousePressed(MouseEvent e){
+						resultsPanel.removeAll();
+						((CardLayout)informationContainer.getLayout()).show(informationContainer,"InfoPanel");
+					}
+				});
 			}
 		}
 
 		CommandSearch finder = new CommandSearch(commands);
 
 		JTextField search = new JTextField();
-		springLayout.putConstraint(SpringLayout.EAST, search, -10, SpringLayout.EAST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, search, 53, SpringLayout.NORTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, search, 6, SpringLayout.EAST, locationTracking);
+		springLayout.putConstraint(SpringLayout.SOUTH, search, -373, SpringLayout.SOUTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, search, -190, SpringLayout.EAST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, locationTracking, 0, SpringLayout.SOUTH, search);
+		springLayout.putConstraint(SpringLayout.NORTH, informationContainer, 11, SpringLayout.SOUTH, search);
 		search.setToolTipText("What do you want to do?");
-		springLayout.putConstraint(SpringLayout.NORTH, search, 11, SpringLayout.NORTH, lblUnixCommands);
-		
+
 		GridBagLayout gbl_locationTracking = new GridBagLayout();
-		gbl_locationTracking.columnWidths = new int[]{384, 0};
-		gbl_locationTracking.rowHeights = new int[] {34, 34, 34};
+		gbl_locationTracking.columnWidths = new int[]{100, 100,100};
+		gbl_locationTracking.rowHeights = new int[] {34};
 		gbl_locationTracking.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_locationTracking.rowWeights = new double[]{0.0, 0.0};
+		gbl_locationTracking.rowWeights = new double[]{0.0};
 		locationTracking.setLayout(gbl_locationTracking);
 
-		JButton btnTopLevel = new JButton("General Topics");
-		btnTopLevel.setPreferredSize(new Dimension(198, 33));
+		JButton btnTopLevel = new JButton("Topics");
+		btnTopLevel.setPreferredSize(new Dimension(60, 33));
 		btnTopLevel.setIcon(null);
 		btnTopLevel.setMaximumSize(new Dimension(198, 33));
-		
+
 		GridBagConstraints gbc_btnTopLevel = new GridBagConstraints();
 		gbc_btnTopLevel.fill = GridBagConstraints.HORIZONTAL;
-//		gbc_btnTopLevel.anchor = GridBagConstraints.PAGE_START;
+		//		gbc_btnTopLevel.anchor = GridBagConstraints.PAGE_START;
 		gbc_btnTopLevel.gridx = 0;
 		gbc_btnTopLevel.gridy = 0;
 		locationTracking.add(btnTopLevel, gbc_btnTopLevel);
-		
+
 		btnTopLevel.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mousePressed(MouseEvent e){
@@ -198,32 +237,126 @@ public class MainWindow {
 				locationTracking.add(btnTopLevel, gbc_btnTopLevel);
 				locationTracking.repaint();
 				((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "topicsPanel");
+				locationTitle.setText("General Topics");
 			}
 		});
-		
-		
-		
-		
+		btnTopLevel.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e){
+				resultsPanel.removeAll();
+				((CardLayout)informationContainer.getLayout()).show(informationContainer,"InfoPanel");
+			}
+		});
+
 		contentFrame.getContentPane().add(search);
 		search.setColumns(10);
 
 		JButton btnSearch = new JButton("Search");
-		springLayout.putConstraint(SpringLayout.EAST, btnSearch, -202, SpringLayout.EAST, contentFrame.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, search, 6, SpringLayout.EAST, btnSearch);
-		springLayout.putConstraint(SpringLayout.EAST, lblUnixCommands, -282, SpringLayout.WEST, btnSearch);
-		springLayout.putConstraint(SpringLayout.NORTH, btnSearch, 11, SpringLayout.NORTH, lblUnixCommands);
+		springLayout.putConstraint(SpringLayout.NORTH, btnSearch, 53, SpringLayout.NORTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, btnSearch, 616, SpringLayout.WEST, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, btnSearch, -11, SpringLayout.NORTH, informationContainer);
+		springLayout.putConstraint(SpringLayout.EAST, btnSearch, 91, SpringLayout.EAST, search);
 		btnSearch.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mousePressed(MouseEvent e){
 				List<UCommand> results = finder.searchByString(search.getText());
 				String result = "";
+				resultsPanel.removeAll();
 				for(UCommand c: results){
-					result += c.toString() + "\n\n";
+					JButton b = new JButton(c.getName());
+					b.addMouseListener(new MouseAdapter(){
+						@Override
+						public void mousePressed(MouseEvent e){
+							optionalArgsPanel.removeAll();
+							locationTracking.removeAll();
+							locationTracking.add(btnTopLevel, gbc_btnTopLevel);
+							commandsPanel.removeAll();
+							
+							//populate the commands panel
+							for(UCommand com: commands){
+								if(com.getCategory().equals(c.getCategory())){
+									JButton butt = new JButton(com.getName());
+									butt.addMouseListener(new CommandsPanelCtrl(com, com.getCategory(), textDisplayPane, selectionPanel, optionalArgsPanel, locationTracking, locationTitle));
+									commandsPanel.add(butt);
+								}
+							}
+							
+							//set the panel to show the arguments
+							for(UArg arg: c.getArgs()){
+								JButton butt = new JButton(arg.getCall());
+								butt.addMouseListener(new ArgsPanelCtrl(c, arg, textDisplayPane, locationTracking, locationTitle));
+								optionalArgsPanel.add(butt);
+							}
+							((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "argsPanel");
+							
+							//add tracking button w/functionality
+							JButton categoryButton = new JButton(c.getCategory());
+							categoryButton.setPreferredSize(new Dimension(100,33));
+							categoryButton.addMouseListener(new MouseAdapter(){
+								@Override
+								public void mousePressed(MouseEvent e){
+									if(locationTracking.getComponents().length > 2){
+										locationTracking.remove(2);
+										locationTracking.repaint();
+									}
+									((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "commandsPanel");
+									locationTitle.setText(c.getCategory() + " Commands");
+									locationTitle.repaint();
+								}
+							});
+							
+							//add tracking button w/functionality
+							JButton commandButton = new JButton(c.getName());
+							commandButton.setPreferredSize(new Dimension(100,33));
+							commandButton.addMouseListener(new MouseAdapter(){
+								@Override
+								public void mousePressed(MouseEvent e){
+									((CardLayout)selectionPanel.getLayout()).show(selectionPanel, "argsPanel");
+									locationTitle.setText(c.getName() + " Arguments");
+								}
+							});
+							
+							GridBagConstraints gbc_cmd = new GridBagConstraints();
+							gbc_cmd.fill = GridBagConstraints.HORIZONTAL;
+							gbc_cmd.gridx = 2;
+							gbc_cmd.gridy = 0;
+							
+							GridBagConstraints gbc_cat = new GridBagConstraints();
+							gbc_cat.fill = GridBagConstraints.HORIZONTAL;
+							gbc_cat.gridx = 1;
+							gbc_cat.gridy = 0;
+							
+							locationTracking.add(categoryButton, gbc_cat);
+							locationTracking.add(commandButton, gbc_cmd);
+							locationTitle.setText(c.getName() + " Arguments");
+							optionalArgsPanel.repaint();
+							((CardLayout)informationContainer.getLayout()).show(informationContainer,"InfoPanel");
+						}
+					});
+					resultsPanel.add(b);
+					((CardLayout)informationContainer.getLayout()).show(informationContainer,"SearchResultsPane");
 				}
-				txtpnTbd.setText(result);
+				resultsPanel.repaint();
 			}
 		});
 		contentFrame.getContentPane().add(btnSearch);
+
+		JButton btnClear = new JButton("Clear");
+		springLayout.putConstraint(SpringLayout.NORTH, btnClear, 53, SpringLayout.NORTH, contentFrame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, btnClear, 6, SpringLayout.EAST, btnSearch);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnClear, -11, SpringLayout.NORTH, informationContainer);
+		springLayout.putConstraint(SpringLayout.EAST, btnClear, -17, SpringLayout.EAST, contentFrame.getContentPane());
+		contentFrame.getContentPane().add(btnClear);
+		btnClear.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mousePressed(MouseEvent e){
+				resultsPanel.removeAll();
+				textDisplayPane.setText("");
+				((CardLayout)informationContainer.getLayout()).show(informationContainer,"InfoPanel");
+			}
+		});
+
+
 
 	}
 }

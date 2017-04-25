@@ -17,7 +17,7 @@ public class CommandSearch {
 			if(similar(c.name, searchString)){
 				results.add(c);
 			}
-			if(similar(c.description, searchString)){
+			else if(similar(c.description, searchString)){
 				results.add(c);
 			}
 		}
